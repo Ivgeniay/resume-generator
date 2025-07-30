@@ -1,0 +1,102 @@
+<!doctype html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>Resume - {{personalInfo.fullName}}</title>
+		<style>
+			{{CSS}}
+		</style>
+	</head>
+	<body>
+		<div class="container">
+			<!-- Header Section -->
+			<header class="header">
+				<div class="profile-photo">
+					<div class="photo-placeholder"></div>
+				</div>
+				<div class="header-info">
+					<h1>{{personalInfo.fullName}}</h1>
+					<h2>{{personalInfo.position}}</h2>
+					<div class="contact-details">
+						<p>Phone: {{personalInfo.phone}}</p>
+						<p>Email: {{personalInfo.email}}</p>
+						<p>Location: {{personalInfo.location}}</p>
+					</div>
+				</div>
+			</header>
+
+			<div class="content">
+				<!-- Left Sidebar -->
+				<aside class="sidebar">
+					<section class="skills-section">
+						<h3>SKILLS</h3>
+						<div class="skills-list" id="skills-container"></div>
+					</section>
+
+					<section class="education-section">
+						<h3>EDUCATION</h3>
+						<div
+							class="education-list"
+							id="education-container"
+						></div>
+					</section>
+				</aside>
+
+				<!-- Main Content -->
+				<main class="main-content">
+					<section class="experience-section">
+						<h3>WORK EXPERIENCE</h3>
+						<div
+							class="experience-list"
+							id="experience-container"
+						></div>
+					</section>
+				</main>
+			</div>
+		</div>
+
+		<script>
+			const resumeData = {{RESUME_DATA}};
+
+			// Skills
+			const skillsContainer = document.getElementById('skills-container');
+			if (resumeData.skills) {
+			    skillsContainer.innerHTML = resumeData.skills.map(skill => `
+			        <div class="skill-item">${skill}</div>
+			    `).join('');
+			}
+
+			// Experience
+			const expContainer = document.getElementById('experience-container');
+			if (resumeData.experience) {
+			    expContainer.innerHTML = resumeData.experience.map(item => `
+			        <div class="experience-item">
+			            <div class="job-header">
+			                <h4>${item.position}</h4>
+			                <span class="company">${item.company} | ${item.startDate} - ${item.endDate}</span>
+			            </div>
+			            <p class="job-description">${item.description}</p>
+			        </div>
+			    `).join('');
+			}
+
+			// Education (both sections)
+			const eduContainer = document.getElementById('education-container');
+			const academicContainer = document.getElementById('academic-container');
+
+			if (resumeData.education) {
+			    const educationHTML = resumeData.education.map(item => `
+			        <div class="education-item">
+			            <div class="edu-title">${item.degree}</div>
+			            <div class="edu-details">${item.institution}</div>
+			            <div class="edu-year">${item.startDate} - ${item.endDate}</div>
+			        </div>
+			    `).join('');
+
+			    eduContainer.innerHTML = educationHTML;
+			    academicContainer.innerHTML = educationHTML;
+			}
+		</script>
+	</body>
+</html>

@@ -1,62 +1,70 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
-import { promises as fs } from 'fs';
-import { join } from 'path';
+import { Injectable, NotFoundException } from "@nestjs/common";
+import { promises as fs } from "fs";
+import { join } from "path";
 import { TemplateListResponseDto, TemplateContentResponseDto } from "commonLib";
 
 @Injectable()
 export class TemplateService {
-  private readonly templatesPath = join(process.cwd(), 'src', 'templates');
+	private readonly templatesPath = join(process.cwd(), "src", "templates");
 
-  async getTemplatesList(): Promise<TemplateListResponseDto> {
-    try {
-      const directories = await fs.readdir(this.templatesPath, { withFileTypes: true });
-      const templates = directories
-        .filter(dirent => dirent.isDirectory())
-        .map(dirent => dirent.name);
-      
-      return { templates };
-    } catch (error) {
-      throw new NotFoundException('Templates directory not found');
-    }
-  }
+	async getTemplatesList(): Promise<TemplateListResponseDto> {
+		try {
+			const directories = await fs.readdir(this.templatesPath, {
+				withFileTypes: true,
+			});
+			const templates = directories
+				.filter((dirent) => dirent.isDirectory())
+				.map((dirent) => dirent.name);
 
-  async getTemplateContent(templateName: string): Promise<TemplateContentResponseDto> {
-    const templatePath = join(this.templatesPath, templateName);
-    const htmlPath = join(templatePath, 'index.html');
-    const cssPath = join(templatePath, 'style.css');
+			return { templates };
+		} catch (error) {
+			throw new NotFoundException("Templates directory not found");
+		}
+	}
 
-    try {
-      const [htmlExists, cssExists] = await Promise.all([
-        this.fileExists(htmlPath),
-        this.fileExists(cssPath)
-      ]);
+	async getTemplateContent(
+		templateName: string
+	): Promise<TemplateContentResponseDto> {
+		const templatePath = join(this.templatesPath, templateName);
+		const htmlPath = join(templatePath, "index.html");
+		const cssPath = join(templatePath, "style.css");
 
-      if (!htmlExists) {
-        throw new NotFoundException(`Template ${templateName} not found`);
-      }
+		try {
+			const [htmlExists, cssExists] = await Promise.all([
+				this.fileExists(htmlPath),
+				this.fileExists(cssPath),
+			]);
 
-      const html = await fs.readFile(htmlPath, 'utf-8');
-      const css = cssExists ? await fs.readFile(cssPath, 'utf-8') : '';
+			if (!htmlExists) {
+				throw new NotFoundException(
+					`Template ${templateName} not found`
+				);
+			}
 
-      return {
-        name: templateName,
-        html,
-        css
-      };
-    } catch (error) {
-      if (error instanceof NotFoundException) {
-        throw error;
-      }
-      throw new NotFoundException(`Error reading template ${templateName}`);
-    }
-  }
+			const html = await fs.readFile(htmlPath, "utf-8");
+			const css = cssExists ? await fs.readFile(cssPath, "utf-8") : "";
 
-  private async fileExists(path: string): Promise<boolean> {
-    try {
-      await fs.access(path);
-      return true;
-    } catch {
-      return false;
-    }
-  }
+			return {
+				name: templateName,
+				html,
+				css,
+			};
+		} catch (error) {
+			if (error instanceof NotFoundException) {
+				throw error;
+			}
+			throw new NotFoundException(
+				`Error reading template ${templateName}`
+			);
+		}
+	}
+
+	private async fileExists(path: string): Promise<boolean> {
+		try {
+			await fs.access(path);
+			return true;
+		} catch {
+			return false;
+		}
+	}
 }

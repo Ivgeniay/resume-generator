@@ -1,0 +1,80 @@
+<!doctype html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>Resume - {{personalInfo.fullName}}</title>
+		<style>
+			{{CSS}}
+		</style>
+	</head>
+	<body>
+		<div class="container">
+			<header class="header">
+				<h1>{{personalInfo.fullName}}</h1>
+				<h2>{{personalInfo.position}}</h2>
+				<div class="contact-info">
+					<span>{{personalInfo.email}}</span>
+					<span>{{personalInfo.phone}}</span>
+					<span>{{personalInfo.location}}</span>
+				</div>
+			</header>
+
+			<section class="section">
+				<h3>Professional Experience</h3>
+				<div class="experience-list" id="experience-container"></div>
+			</section>
+
+			<section class="section">
+				<h3>Education</h3>
+				<div class="education-list" id="education-container"></div>
+			</section>
+
+			<section class="section">
+				<h3>Skills</h3>
+				<div class="skills-list" id="skills-container"></div>
+			</section>
+		</div>
+
+		<script>
+			const resumeData = {{RESUME_DATA}};
+
+			// Experience
+			const expContainer = document.getElementById('experience-container');
+			if (resumeData.experience) {
+			    expContainer.innerHTML = resumeData.experience.map(item => `
+			        <div class="experience-item">
+			            <div class="experience-header">
+			                <h4>${item.position} at ${item.company}</h4>
+			                <span class="dates">${item.startDate} - ${item.endDate}</span>
+			            </div>
+			            <p class="description">${item.description}</p>
+			        </div>
+			    `).join('');
+			}
+
+			// Education
+			const eduContainer = document.getElementById('education-container');
+			if (resumeData.education) {
+			    eduContainer.innerHTML = resumeData.education.map(item => `
+			        <div class="education-item">
+			            <div class="education-header">
+			                <h4>${item.degree} in ${item.fieldOfStudy}</h4>
+			                <span class="dates">${item.startDate} - ${item.endDate}</span>
+			            </div>
+			            <p class="institution">${item.institution}</p>
+			            ${item.description ? `<p class="description">${item.description}</p>` : ''}
+			        </div>
+			    `).join('');
+			}
+
+			// Skills
+			const skillsContainer = document.getElementById('skills-container');
+			if (resumeData.skills) {
+			    skillsContainer.innerHTML = resumeData.skills.map(skill => `
+			        <span class="skill-item">${skill}</span>
+			    `).join('');
+			}
+		</script>
+	</body>
+</html>

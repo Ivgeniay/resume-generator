@@ -1,0 +1,140 @@
+<!doctype html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>Resume - {{personalInfo.fullName}}</title>
+		<style>
+			{{CSS}}
+		</style>
+	</head>
+	<body>
+		<div class="container">
+			<!-- Header -->
+			<header class="header">
+				<div class="profile-photo">
+					<div class="photo-placeholder"></div>
+				</div>
+				<div class="header-text">
+					<h1>{{personalInfo.fullName}}</h1>
+					<h2>{{personalInfo.position}}</h2>
+				</div>
+			</header>
+
+			<div class="content">
+				<!-- Left Sidebar -->
+				<aside class="sidebar">
+					<section class="contact-section">
+						<h3>CONTACT</h3>
+						<div class="contact-item">
+							<span class="icon">📞</span>
+							<span>{{personalInfo.phone}}</span>
+						</div>
+						<div class="contact-item">
+							<span class="icon">✉️</span>
+							<span>{{personalInfo.email}}</span>
+						</div>
+						<div class="contact-item">
+							<span class="icon">📍</span>
+							<span>{{personalInfo.location}}</span>
+						</div>
+						<div class="contact-item">
+							<span class="icon">🌐</span>
+							<span>www.portfolio.com</span>
+						</div>
+					</section>
+
+					<section class="skills-section">
+						<h3>SKILLS</h3>
+						<div class="skills-list" id="skills-container"></div>
+					</section>
+				</aside>
+
+				<!-- Main Content -->
+				<main class="main-content">
+					<section class="experience-section">
+						<div class="section-header">
+							<span class="section-icon">💼</span>
+							<h2>WORK EXPERIENCE</h2>
+						</div>
+						<div class="timeline-container">
+							<div class="timeline-line"></div>
+							<div
+								class="experience-list"
+								id="experience-container"
+							></div>
+						</div>
+					</section>
+
+					<section class="education-section">
+						<div class="section-header">
+							<span class="section-icon">🎓</span>
+							<h2>EDUCATION</h2>
+						</div>
+						<div class="timeline-container">
+							<div class="timeline-line"></div>
+							<div
+								class="education-list"
+								id="education-container"
+							></div>
+						</div>
+					</section>
+				</main>
+			</div>
+		</div>
+
+		<script>
+			const resumeData = {{RESUME_DATA}};
+
+			// Skills
+			const skillsContainer = document.getElementById('skills-container');
+			if (resumeData.skills) {
+			    skillsContainer.innerHTML = resumeData.skills.map(skill => `
+			        <div class="skill-item">• ${skill}</div>
+			    `).join('');
+			}
+
+			// Experience
+			const expContainer = document.getElementById('experience-container');
+			if (resumeData.experience) {
+			    expContainer.innerHTML = resumeData.experience.map(item => `
+			        <div class="timeline-item">
+			            <div class="timeline-dot"></div>
+			            <div class="timeline-content">
+			                <div class="job-header">
+			                    <div class="job-info">
+			                        <h4>${item.company}</h4>
+			                        <p class="job-title">${item.position}</p>
+			                    </div>
+			                    <div class="job-period">${item.startDate} - ${item.endDate}</div>
+			                </div>
+			                <div class="job-description">
+			                    <p>• ${item.description}</p>
+			                </div>
+			            </div>
+			        </div>
+			    `).join('');
+			}
+
+			// Education
+			const eduContainer = document.getElementById('education-container');
+			if (resumeData.education) {
+			    eduContainer.innerHTML = resumeData.education.map(item => `
+			        <div class="timeline-item">
+			            <div class="timeline-dot"></div>
+			            <div class="timeline-content">
+			                <div class="edu-header">
+			                    <div class="edu-info">
+			                        <h4>${item.degree}</h4>
+			                        <p class="edu-school">${item.institution}</p>
+			                        <p class="edu-gpa">GPA: 3.8 / 4.0</p>
+			                    </div>
+			                    <div class="edu-period">${item.startDate} - ${item.endDate}</div>
+			                </div>
+			            </div>
+			        </div>
+			    `).join('');
+			}
+		</script>
+	</body>
+</html>
