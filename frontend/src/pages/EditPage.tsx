@@ -1,22 +1,16 @@
 import React, { useState, useEffect } from "react";
-import { useNavigate, useLocation } from "react-router-dom";
-import { useResumeData } from "../hooks/useResumeData";
+import { useNavigate } from "react-router-dom";
+import { useAppStore } from "../state/appState";
 import { useTemplates } from "../hooks/useTemplates";
 import { ResumeService } from "../services/resumeService";
 import { Button } from "../components/ui/Button";
 import { LoadingSpinner } from "../components/ui/LoadingSpinner";
 import { EditableResume } from "../components/editor/EditableResume";
 
-interface LocationState {
-	selectedTemplate: string;
-}
-
 export const EditPage: React.FC = () => {
 	const navigate = useNavigate();
-	const location = useLocation();
-	const state = location.state as LocationState;
 
-	const { generatedData } = useResumeData();
+	const { generatedData, selectedTemplate } = useAppStore();
 	const { previewTemplate } = useTemplates();
 
 	const [resumeHtml, setResumeHtml] = useState<string>("");
@@ -25,19 +19,21 @@ export const EditPage: React.FC = () => {
 	const [isGeneratingPdf, setIsGeneratingPdf] = useState(false);
 	const [error, setError] = useState<string | null>(null);
 
-	const selectedTemplate = state?.selectedTemplate;
-
 	useEffect(() => {
-		// if (!generatedData || !selectedTemplate) {
-		// 	navigate("/");
-		// 	return;
-		// }
+		if (!generatedData || !selectedTemplate) {
+			navigate("/");
+			return;
+		}
+
+		console.log(generatedData);
 
 		loadPreview();
-	}, [generatedData, selectedTemplate]);
+	}, [generatedData, selectedTemplate, navigate]);
 
 	const loadPreview = async () => {
 		if (!selectedTemplate || !editedData) return;
+
+		// console.log("EditPage loadPreview:", { selectedTemplate, editedData });
 
 		setIsLoadingPreview(true);
 		setError(null);
@@ -95,7 +91,7 @@ export const EditPage: React.FC = () => {
 					<p className="text-gray-600 mb-4">
 						Please generate a resume first.
 					</p>
-					<Button onClick={handleBack}>Go Back</Button>
+					<Button onClick={handleBack}>Go Back to Home</Button>
 				</div>
 			</div>
 		);
@@ -106,51 +102,22 @@ export const EditPage: React.FC = () => {
 			<div className="max-w-7xl mx-auto px-4 py-8">
 				<header className="flex items-center justify-between mb-8">
 					<div>
-						<h1 className="text-3xl font-bold text-gray-900 mb-2">
-							Edit Your Resume
+						<h1 className="text-3xl font-bold text-gray-900">
+							Edit Resume
 						</h1>
-						<p className="text-gray-600">
-							Make any final adjustments and download your resume
-							as PDF
+						<p className="text-gray-600 mt-2">
+							Template: {selectedTemplate}
 						</p>
 					</div>
-
-					<div className="flex space-x-4">
+					<div className="flex items-center space-x-4">
 						<Button variant="outline" onClick={handleBack}>
-							<svg
-								className="w-4 h-4 mr-2"
-								fill="none"
-								stroke="currentColor"
-								viewBox="0 0 24 24"
-							>
-								<path
-									strokeLinecap="round"
-									strokeLinejoin="round"
-									strokeWidth={2}
-									d="M10 19l-7-7m0 0l7-7m-7 7h18"
-								/>
-							</svg>
-							Back
+							Back to Home
 						</Button>
-
 						<Button
 							onClick={handleSaveAsPdf}
 							disabled={isGeneratingPdf || isLoadingPreview}
 							isLoading={isGeneratingPdf}
 						>
-							<svg
-								className="w-4 h-4 mr-2"
-								fill="none"
-								stroke="currentColor"
-								viewBox="0 0 24 24"
-							>
-								<path
-									strokeLinecap="round"
-									strokeLinejoin="round"
-									strokeWidth={2}
-									d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
-								/>
-							</svg>
 							{isGeneratingPdf
 								? "Generating PDF..."
 								: "Save as PDF"}

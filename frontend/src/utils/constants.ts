@@ -1,7 +1,12 @@
 export const AI_MODELS = [
 	{
+		value: "gpt-4o-mini",
+		label: "GPT-4o Mini (Recommended)",
+		description: "Fast and economical, perfect for resumes",
+	},
+	{
 		value: "gpt-4",
-		label: "GPT-4 (Recommended)",
+		label: "GPT-4",
 		description: "Best quality, slower",
 	},
 	{
@@ -12,7 +17,7 @@ export const AI_MODELS = [
 	{
 		value: "gpt-3.5-turbo",
 		label: "GPT-3.5 Turbo",
-		description: "Fast and economical",
+		description: "Basic model, fastest",
 	},
 ] as const;
 

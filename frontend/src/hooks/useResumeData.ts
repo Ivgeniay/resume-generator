@@ -45,7 +45,7 @@ const defaultLockedFields: FormFieldLock = {
 };
 
 const defaultAISettings: AISettings = {
-	model: "gpt-4",
+	model: "gpt-4o-mini",
 	temperature: 0.7,
 	prompt: "",
 };

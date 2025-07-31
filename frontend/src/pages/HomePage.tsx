@@ -2,36 +2,51 @@ import React from "react";
 import { useNavigate } from "react-router-dom";
 import { useResumeData } from "../hooks/useResumeData";
 import { useTemplates } from "../hooks/useTemplates";
+import { useAppStore } from "../state/appState";
+import { ResumeService } from "../services/resumeService";
 import { Button } from "../components/ui/Button";
 import { LoadingSpinner } from "../components/ui/LoadingSpinner";
 import { ResumeForm } from "../components/forms/ResumeForm";
 import { TemplateGallery } from "../components/templates/TemplateGallery";
+import type { GenerateResumeRequestDto } from "../types";
 
 export const HomePage: React.FC = () => {
 	const navigate = useNavigate();
+
 	const {
 		formData,
 		lockedFields,
 		aiSettings,
-		isLoading: isGenerating,
-		error,
 		updateFormData,
 		updateLockedFields,
 		updateAISettings,
-		generateResume,
-		clearError,
+		clearError: clearLocalError,
 	} = useResumeData();
 
 	const {
 		templates,
-		selectedTemplate,
 		templatePreviews,
 		isLoading: isLoadingTemplates,
 		isLoadingPreviews,
 		error: templateError,
-		selectTemplate,
+		selectTemplate: selectLocalTemplate,
 		clearError: clearTemplateError,
 	} = useTemplates();
+
+	const {
+		selectedTemplate,
+		isGenerating,
+		error,
+		setGeneratedData,
+		setSelectedTemplate,
+		setIsGenerating,
+		setError,
+	} = useAppStore();
+
+	const handleTemplateSelect = (templateName: string) => {
+		selectLocalTemplate(templateName);
+		setSelectedTemplate(templateName);
+	};
 
 	const handleGenerate = async () => {
 		if (!selectedTemplate) {
@@ -39,16 +54,42 @@ export const HomePage: React.FC = () => {
 			return;
 		}
 
-		try {
-			await generateResume();
-			navigate("/edit", {
-				state: {
-					selectedTemplate,
-				},
-			});
-		} catch (err) {
-			console.error("Failed to generate resume:", err);
+		if (!aiSettings.prompt.trim()) {
+			setError("Please provide a prompt for AI generation");
+			return;
 		}
+
+		setIsGenerating(true);
+		setError(null);
+
+		try {
+			const requestData: GenerateResumeRequestDto = {
+				prompt: aiSettings.prompt,
+				model: aiSettings.model,
+				temperature: aiSettings.temperature,
+				personalInfo: formData.personalInfo,
+				education: formData.education,
+				experience: formData.experience,
+				skills: formData.skills,
+				lockedFields: lockedFields,
+			};
+
+			const result = await ResumeService.generateResume(requestData);
+			setGeneratedData(result);
+
+			navigate("/edit");
+		} catch (err) {
+			setError(
+				err instanceof Error ? err.message : "Failed to generate resume"
+			);
+		} finally {
+			setIsGenerating(false);
+		}
+	};
+
+	const clearError = () => {
+		setError(null);
+		clearLocalError();
 	};
 
 	const canGenerate = selectedTemplate && aiSettings.prompt.trim().length > 0;
@@ -116,7 +157,7 @@ export const HomePage: React.FC = () => {
 								selectedTemplate={selectedTemplate}
 								templatePreviews={templatePreviews}
 								isLoadingPreviews={isLoadingPreviews}
-								onSelectTemplate={selectTemplate}
+								onSelectTemplate={handleTemplateSelect}
 							/>
 						</section>
 					</div>

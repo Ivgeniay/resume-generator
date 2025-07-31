@@ -11,12 +11,22 @@
 	<body>
 		<div class="container">
 			<header class="header">
-				<h1>{{personalInfo.fullName}}</h1>
-				<h2>{{personalInfo.position}}</h2>
+				<h1 data-editable="personalInfo.fullName">
+					{{personalInfo.fullName}}
+				</h1>
+				<h2 data-editable="personalInfo.position">
+					{{personalInfo.position}}
+				</h2>
 				<div class="contact-info">
-					<span>{{personalInfo.email}}</span>
-					<span>{{personalInfo.phone}}</span>
-					<span>{{personalInfo.location}}</span>
+					<span data-editable="personalInfo.email"
+						>{{personalInfo.email}}</span
+					>
+					<span data-editable="personalInfo.phone"
+						>{{personalInfo.phone}}</span
+					>
+					<span data-editable="personalInfo.location"
+						>{{personalInfo.location}}</span
+					>
 				</div>
 			</header>
 
@@ -38,43 +48,71 @@
 
 		<script>
 			const resumeData = {{RESUME_DATA}};
+			console.log("Script executed! resumeData:", resumeData);
 
 			// Experience
 			const expContainer = document.getElementById('experience-container');
+			console.log("Experience container found:", expContainer);
 			if (resumeData.experience) {
-			    expContainer.innerHTML = resumeData.experience.map(item => `
+				console.log("Generating experience HTML for", resumeData.experience.length, "items");
+			    expContainer.innerHTML = resumeData.experience.map((item, index) => `
 			        <div class="experience-item">
 			            <div class="experience-header">
-			                <h4>${item.position} at ${item.company}</h4>
-			                <span class="dates">${item.startDate} - ${item.endDate}</span>
+			                <h4>
+			                    <span data-editable="experience.${index}.position">${item.position}</span>
+			                    at
+			                    <span data-editable="experience.${index}.company">${item.company}</span>
+			                </h4>
+			                <span class="dates">
+			                    <span data-editable="experience.${index}.startDate">${item.startDate}</span>
+			                    -
+			                    <span data-editable="experience.${index}.endDate">${item.endDate}</span>
+			                </span>
 			            </div>
-			            <p class="description">${item.description}</p>
+			            <p class="description" data-editable="experience.${index}.description">${item.description}</p>
 			        </div>
 			    `).join('');
+				console.log("Experience HTML generated:", expContainer.innerHTML.length, "characters");
 			}
 
 			// Education
 			const eduContainer = document.getElementById('education-container');
+			console.log("Education container found:", eduContainer);
 			if (resumeData.education) {
-			    eduContainer.innerHTML = resumeData.education.map(item => `
+				console.log("Generating education HTML for", resumeData.education.length, "items");
+			    eduContainer.innerHTML = resumeData.education.map((item, index) => `
 			        <div class="education-item">
 			            <div class="education-header">
-			                <h4>${item.degree} in ${item.fieldOfStudy}</h4>
-			                <span class="dates">${item.startDate} - ${item.endDate}</span>
+			                <h4>
+			                    <span data-editable="education.${index}.degree">${item.degree}</span>
+			                    in
+			                    <span data-editable="education.${index}.fieldOfStudy">${item.fieldOfStudy}</span>
+			                </h4>
+			                <span class="dates">
+			                    <span data-editable="education.${index}.startDate">${item.startDate}</span>
+			                    -
+			                    <span data-editable="education.${index}.endDate">${item.endDate}</span>
+			                </span>
 			            </div>
-			            <p class="institution">${item.institution}</p>
-			            ${item.description ? `<p class="description">${item.description}</p>` : ''}
+			            <p class="institution" data-editable="education.${index}.institution">${item.institution}</p>
+			            ${item.description ? `<p class="description" data-editable="education.${index}.description">${item.description}</p>` : ''}
 			        </div>
 			    `).join('');
+				console.log("Education HTML generated:", eduContainer.innerHTML.length, "characters");
 			}
 
 			// Skills
 			const skillsContainer = document.getElementById('skills-container');
+			console.log("Skills container found:", skillsContainer);
 			if (resumeData.skills) {
-			    skillsContainer.innerHTML = resumeData.skills.map(skill => `
-			        <span class="skill-item">${skill}</span>
+				console.log("Generating skills HTML for", resumeData.skills.length, "items");
+			    skillsContainer.innerHTML = resumeData.skills.map((skill, index) => `
+			        <span class="skill-item" data-editable="skills.${index}">${skill}</span>
 			    `).join('');
+				console.log("Skills HTML generated:", skillsContainer.innerHTML.length, "characters");
 			}
+
+			console.log("Script finished executing!");
 		</script>
 	</body>
 </html>

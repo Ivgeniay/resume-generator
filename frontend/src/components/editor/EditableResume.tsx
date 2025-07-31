@@ -30,7 +30,10 @@ export const EditableResume: React.FC<EditableResumeProps> = ({
 				doc.write(resumeHtml);
 				doc.close();
 
-				setupEditableElements(doc);
+				setTimeout(() => {
+					setupEditableElements(doc);
+				}, 1000);
+				// setupEditableElements(doc);
 			}
 		}
 	}, [resumeHtml]);

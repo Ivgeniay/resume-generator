@@ -36,7 +36,8 @@ export class TemplateService {
 	): Promise<string> {
 		try {
 			const template = await this.getTemplateContent(templateName);
-			return this.fillTemplate(template, resumeData);
+			const result = this.fillTemplate(template, resumeData);
+			return result;
 		} catch (error) {
 			throw new Error(handleApiError(error));
 		}
@@ -83,8 +84,9 @@ export class TemplateService {
 		};
 
 		html = replaceTokens(html, data);
-		html = html.replace("{{RESUME_DATA}}", JSON.stringify(data));
 
+		const resumeDataJson = JSON.stringify(data);
+		html = html.replace("{{RESUME_DATA}}", resumeDataJson);
 		return html;
 	}
 }
