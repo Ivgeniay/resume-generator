@@ -11,6 +11,8 @@ services:
             - backend
         networks:
             - app-network
+        volumes:
+            - ./commonLib:/app/commonLib:ro
 
     backend:
         build:

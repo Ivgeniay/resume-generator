@@ -51,8 +51,6 @@ Locked Fields (НЕ ИЗМЕНЯТЬ):
 5. Возвращай ТОЛЬКО валидный JSON в точно такой же структуре
     `;
 
-		console.log(prompt);
-
 		const result = await structuredLlm.invoke(prompt);
 		return this.mergeLockdFields(result, request);
 	}
