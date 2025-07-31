@@ -26,10 +26,10 @@ export const ExperienceSchema = z.object({
 });
 
 export const ResumeSchema = z.object({
-	personalInfo: PersonalInfoSchema.optional(),
-	education: z.array(EducationSchema).optional(),
-	experience: z.array(ExperienceSchema).optional(),
-	skills: z.array(z.string()).optional(),
+	personalInfo: PersonalInfoSchema,
+	education: z.array(EducationSchema),
+	experience: z.array(ExperienceSchema),
+	skills: z.array(z.string()),
 });
 
 export type ResumeSchemaType = z.infer<typeof ResumeSchema>;

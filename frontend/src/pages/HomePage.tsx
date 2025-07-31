@@ -25,7 +25,9 @@ export const HomePage: React.FC = () => {
 	const {
 		templates,
 		selectedTemplate,
+		templatePreviews,
 		isLoading: isLoadingTemplates,
+		isLoadingPreviews,
 		error: templateError,
 		selectTemplate,
 		clearError: clearTemplateError,
@@ -37,14 +39,15 @@ export const HomePage: React.FC = () => {
 			return;
 		}
 
-		await generateResume();
-
-		if (!error) {
+		try {
+			await generateResume();
 			navigate("/edit", {
 				state: {
 					selectedTemplate,
 				},
 			});
+		} catch (err) {
+			console.error("Failed to generate resume:", err);
 		}
 	};
 
@@ -111,6 +114,8 @@ export const HomePage: React.FC = () => {
 							<TemplateGallery
 								templates={templates}
 								selectedTemplate={selectedTemplate}
+								templatePreviews={templatePreviews}
+								isLoadingPreviews={isLoadingPreviews}
 								onSelectTemplate={selectTemplate}
 							/>
 						</section>

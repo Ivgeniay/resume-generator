@@ -28,10 +28,10 @@ export const EditPage: React.FC = () => {
 	const selectedTemplate = state?.selectedTemplate;
 
 	useEffect(() => {
-		if (!generatedData || !selectedTemplate) {
-			navigate("/");
-			return;
-		}
+		// if (!generatedData || !selectedTemplate) {
+		// 	navigate("/");
+		// 	return;
+		// }
 
 		loadPreview();
 	}, [generatedData, selectedTemplate]);

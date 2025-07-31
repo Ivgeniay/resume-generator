@@ -25,33 +25,29 @@ export class AIService {
 		const structuredLlm = llm.withStructuredOutput(jsonSchema);
 
 		const prompt = `
-Ты профессиональный составитель резюме. На основе промта пользователя и существующих данных резюме улучши и дополни только незаблокированные поля. Заблокированные поля оставь точно такими, какими они были предоставлены.
-
+Заполни резюме для Frontend разработчика на основе запроса пользователя.
 ВАЖНО: Отвечай на том же языке, что и промт пользователя. Если пользователь пишет по-русски, отвечай по-русски. Если по-украински, то по-украински. Если по-английски, то по-английски.
 
 User Prompt: ${request.prompt}
 
-Current Resume Data:
-personalInfo: ${JSON.stringify(request.context.personalInfo)}
-education: ${JSON.stringify(request.context.education)}
-experience: ${JSON.stringify(request.context.experience)}
-skills: ${JSON.stringify(request.context.skills)}
+Текущие данные:
+${JSON.stringify(request.context, null, 2)}
 
-Locked Fields (НЕ ИЗМЕНЯТЬ):
-- personalInfo: ${request.lockedFields.personalInfo}
-- education: ${request.lockedFields.education}
-- experience: ${request.lockedFields.experience}
-- skills: ${request.lockedFields.skills}
+Заблокированные поля (НЕ ИЗМЕНЯТЬ): ${JSON.stringify(request.lockedFields)}
 
-Инструкции:
-1. Изменяй только поля, которые НЕ заблокированы
-2. Улучшай и дополняй контент на основе промта пользователя
-3. Сохраняй ту же структуру и формат
-4. Делай контент профессиональным и привлекательным
-5. Возвращай ТОЛЬКО валидный JSON в точно такой же структуре
-    `;
+ОБЯЗАТЕЛЬНО верни полную структуру со всеми полями, включая массивы skills и education.
+Улучшай и дополняй контент на основе промта пользователя
+`;
 
 		const result = await structuredLlm.invoke(prompt);
+
+		// console.log(
+		// 	"Generated JSON Schema:",
+		// 	JSON.stringify(jsonSchema, null, 2)
+		// );
+		// console.log(prompt);
+		// console.log(result);
+
 		return this.mergeLockdFields(result, request);
 	}
 

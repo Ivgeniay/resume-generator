@@ -5,12 +5,16 @@ import { TemplateCard } from "./TemplateCard";
 interface TemplateGalleryProps {
 	templates: TemplateInfo[];
 	selectedTemplate: string | null;
+	templatePreviews: Record<string, string>;
+	isLoadingPreviews: boolean;
 	onSelectTemplate: (templateName: string) => void;
 }
 
 export const TemplateGallery: React.FC<TemplateGalleryProps> = ({
 	templates,
 	selectedTemplate,
+	templatePreviews,
+	isLoadingPreviews,
 	onSelectTemplate,
 }) => {
 	if (templates.length === 0) {
@@ -49,6 +53,11 @@ export const TemplateGallery: React.FC<TemplateGalleryProps> = ({
 						key={template.name}
 						template={template}
 						isSelected={selectedTemplate === template.name}
+						previewHtml={templatePreviews[template.name]}
+						isLoadingPreview={
+							isLoadingPreviews &&
+							!templatePreviews[template.name]
+						}
 						onSelect={() => onSelectTemplate(template.name)}
 					/>
 				))}
