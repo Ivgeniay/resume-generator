@@ -1,17 +1,18 @@
 import React, { useRef, useEffect, useState } from "react";
 import { InlineEditor } from "./InlineEditor";
+import { useAppStore } from "../../state/appState";
 
 interface EditableResumeProps {
 	resumeHtml: string;
-	resumeData: any;
 	onDataChange: (newData: any) => void;
 }
 
 export const EditableResume: React.FC<EditableResumeProps> = ({
 	resumeHtml,
-	resumeData,
 	onDataChange,
 }) => {
+	const { generatedData } = useAppStore();
+	const [isInlineEditing, setIsInlineEditing] = useState(false);
 	const iframeRef = useRef<HTMLIFrameElement>(null);
 	const [editingElement, setEditingElement] = useState<{
 		element: HTMLElement;
@@ -20,7 +21,7 @@ export const EditableResume: React.FC<EditableResumeProps> = ({
 	} | null>(null);
 
 	useEffect(() => {
-		if (iframeRef.current && resumeHtml) {
+		if (iframeRef.current && resumeHtml && !isInlineEditing) {
 			const iframe = iframeRef.current;
 			const doc =
 				iframe.contentDocument || iframe.contentWindow?.document;
@@ -30,11 +31,12 @@ export const EditableResume: React.FC<EditableResumeProps> = ({
 				doc.write(resumeHtml);
 				doc.close();
 
-				setTimeout(() => {
-					setupEditableElements(doc);
-				}, 1000);
-				// setupEditableElements(doc);
+				setupEditableElements(doc);
 			}
+		}
+
+		if (isInlineEditing) {
+			setIsInlineEditing(false);
 		}
 	}, [resumeHtml]);
 
@@ -101,12 +103,14 @@ export const EditableResume: React.FC<EditableResumeProps> = ({
 	const handleSave = (newValue: string) => {
 		if (!editingElement) return;
 
+		setIsInlineEditing(true);
+
 		editingElement.element.textContent = newValue;
 		editingElement.element.style.backgroundColor = "";
 		editingElement.element.style.outline = "";
 
 		const updatedData = updateNestedValue(
-			resumeData,
+			generatedData,
 			editingElement.path,
 			newValue
 		);

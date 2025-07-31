@@ -16,12 +16,31 @@
 					<div class="photo-placeholder"></div>
 				</div>
 				<div class="header-info">
-					<h1>{{personalInfo.fullName}}</h1>
-					<h2>{{personalInfo.position}}</h2>
+					<h1 data-editable="personalInfo.fullName">
+						{{personalInfo.fullName}}
+					</h1>
+					<h2 data-editable="personalInfo.position">
+						{{personalInfo.position}}
+					</h2>
 					<div class="contact-details">
-						<p>Phone: {{personalInfo.phone}}</p>
-						<p>Email: {{personalInfo.email}}</p>
-						<p>Location: {{personalInfo.location}}</p>
+						<p>
+							Phone:
+							<span data-editable="personalInfo.phone"
+								>{{personalInfo.phone}}</span
+							>
+						</p>
+						<p>
+							Email:
+							<span data-editable="personalInfo.email"
+								>{{personalInfo.email}}</span
+							>
+						</p>
+						<p>
+							Location:
+							<span data-editable="personalInfo.location"
+								>{{personalInfo.location}}</span
+							>
+						</p>
 					</div>
 				</div>
 			</header>
@@ -62,40 +81,47 @@
 			// Skills
 			const skillsContainer = document.getElementById('skills-container');
 			if (resumeData.skills) {
-			    skillsContainer.innerHTML = resumeData.skills.map(skill => `
-			        <div class="skill-item">${skill}</div>
-			    `).join('');
+				skillsContainer.innerHTML = resumeData.skills.map((skill, index) => `
+					<div class="skill-item" data-editable="skills.${index}">${skill}</div>
+				`).join('');
 			}
 
 			// Experience
 			const expContainer = document.getElementById('experience-container');
 			if (resumeData.experience) {
-			    expContainer.innerHTML = resumeData.experience.map(item => `
-			        <div class="experience-item">
-			            <div class="job-header">
-			                <h4>${item.position}</h4>
-			                <span class="company">${item.company} | ${item.startDate} - ${item.endDate}</span>
-			            </div>
-			            <p class="job-description">${item.description}</p>
-			        </div>
-			    `).join('');
+				expContainer.innerHTML = resumeData.experience.map((item, index) => `
+					<div class="experience-item">
+						<div class="job-header">
+							<h4 data-editable="experience.${index}.position">${item.position}</h4>
+							<span class="company">
+								<span data-editable="experience.${index}.company">${item.company}</span>
+								 |
+								<span data-editable="experience.${index}.startDate">${item.startDate}</span>
+								 -
+								<span data-editable="experience.${index}.endDate">${item.endDate}</span>
+							</span>
+						</div>
+						<p class="job-description" data-editable="experience.${index}.description">${item.description}</p>
+					</div>
+				`).join('');
 			}
 
-			// Education (both sections)
+			// Education
 			const eduContainer = document.getElementById('education-container');
-			const academicContainer = document.getElementById('academic-container');
-
 			if (resumeData.education) {
-			    const educationHTML = resumeData.education.map(item => `
-			        <div class="education-item">
-			            <div class="edu-title">${item.degree}</div>
-			            <div class="edu-details">${item.institution}</div>
-			            <div class="edu-year">${item.startDate} - ${item.endDate}</div>
-			        </div>
-			    `).join('');
-
-			    eduContainer.innerHTML = educationHTML;
-			    academicContainer.innerHTML = educationHTML;
+				eduContainer.innerHTML = resumeData.education.map((item, index) => `
+					<div class="education-item">
+						<div class="edu-title" data-editable="education.${index}.degree">${item.degree}</div>
+						<div class="edu-details" data-editable="education.${index}.institution">${item.institution}</div>
+						<div class="edu-field" data-editable="education.${index}.fieldOfStudy">${item.fieldOfStudy}</div>
+						<div class="edu-year">
+							<span data-editable="education.${index}.startDate">${item.startDate}</span>
+							 -
+							<span data-editable="education.${index}.endDate">${item.endDate}</span>
+						</div>
+						${item.description ? `<div class="edu-description" data-editable="education.${index}.description">${item.description}</div>` : ''}
+					</div>
+				`).join('');
 			}
 		</script>
 	</body>

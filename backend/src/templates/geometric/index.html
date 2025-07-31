@@ -22,15 +22,21 @@
 					<div class="section-badge">PERSONAL DATA</div>
 					<div class="data-item">
 						<h4>Email</h4>
-						<p>{{personalInfo.email}}</p>
+						<p data-editable="personalInfo.email">
+							{{personalInfo.email}}
+						</p>
 					</div>
 					<div class="data-item">
 						<h4>Phone</h4>
-						<p>{{personalInfo.phone}}</p>
+						<p data-editable="personalInfo.phone">
+							{{personalInfo.phone}}
+						</p>
 					</div>
 					<div class="data-item">
 						<h4>Location</h4>
-						<p>{{personalInfo.location}}</p>
+						<p data-editable="personalInfo.location">
+							{{personalInfo.location}}
+						</p>
 					</div>
 				</div>
 
@@ -38,21 +44,27 @@
 					<div class="section-badge">CONTACT</div>
 					<div class="contact-item">
 						<span class="contact-icon">📞</span>
-						<span>{{personalInfo.phone}}</span>
+						<span data-editable="personalInfo.phone"
+							>{{personalInfo.phone}}</span
+						>
 					</div>
 					<div class="contact-item">
 						<span class="contact-icon">✉️</span>
-						<span>{{personalInfo.email}}</span>
+						<span data-editable="personalInfo.email"
+							>{{personalInfo.email}}</span
+						>
 					</div>
 					<div class="contact-item">
 						<span class="contact-icon">📍</span>
-						<span>{{personalInfo.location}}</span>
+						<span data-editable="personalInfo.location"
+							>{{personalInfo.location}}</span
+						>
 					</div>
 				</div>
 
 				<div class="social-section">
 					<div class="section-badge">SOCIAL MEDIA</div>
-					<div class="social-item">@reallygreatsite</div>
+					<!-- <div class="social-item">@reallygreatsite</div> -->
 				</div>
 
 				<div class="triangle-decoration bottom-triangle"></div>
@@ -63,19 +75,13 @@
 				<div class="triangle-decoration top-triangle"></div>
 
 				<header class="header">
-					<h1>{{personalInfo.fullName}}</h1>
-					<h2>{{personalInfo.position}}</h2>
+					<h1 data-editable="personalInfo.fullName">
+						{{personalInfo.fullName}}
+					</h1>
+					<h2 data-editable="personalInfo.position">
+						{{personalInfo.position}}
+					</h2>
 				</header>
-
-				<section class="about-section">
-					<h3>ABOUT ME</h3>
-					<p>
-						Experienced {{personalInfo.position}} with strong
-						professional background and proven track record in
-						delivering high-quality results. Passionate about
-						innovation and continuous learning.
-					</p>
-				</section>
 
 				<section class="education-section">
 					<h3>EDUCATION</h3>
@@ -103,35 +109,54 @@
 			// Education
 			const eduContainer = document.getElementById('education-container');
 			if (resumeData.education) {
-			    eduContainer.innerHTML = resumeData.education.map(item => `
-			        <div class="education-item">
-			            <div class="edu-header">
-			                <span class="edu-title">${item.degree} ${item.institution}</span>
-			                <span class="edu-year">${item.startDate}-${item.endDate}</span>
-			            </div>
-			        </div>
-			    `).join('');
+				eduContainer.innerHTML = resumeData.education.map((item, index) => `
+					<div class="education-item">
+						<div class="edu-header">
+							<span class="edu-title">
+								<span data-editable="education.${index}.degree">${item.degree}</span>
+								 -
+								<span data-editable="education.${index}.institution">${item.institution}</span>
+							</span>
+							<span class="edu-year">
+								<span data-editable="education.${index}.startDate">${item.startDate}</span>
+								-
+								<span data-editable="education.${index}.endDate">${item.endDate}</span>
+							</span>
+						</div>
+						<div class="edu-field" data-editable="education.${index}.fieldOfStudy">${item.fieldOfStudy}</div>
+						${item.description ? `<div class="edu-description" data-editable="education.${index}.description">${item.description}</div>` : ''}
+					</div>
+				`).join('');
 			}
 
 			// Experience
 			const expContainer = document.getElementById('experience-container');
 			if (resumeData.experience) {
-			    expContainer.innerHTML = resumeData.experience.map(item => `
-			        <div class="experience-item">
-			            <h4>${item.company}</h4>
-			            <div class="job-description">
-			                <p>• ${item.description}</p>
-			            </div>
-			        </div>
-			    `).join('');
+				expContainer.innerHTML = resumeData.experience.map((item, index) => `
+					<div class="experience-item">
+						<h4>
+							<span data-editable="experience.${index}.company">${item.company}</span>
+							 -
+							<span data-editable="experience.${index}.position">${item.position}</span>
+						</h4>
+						<div class="job-period">
+							<span data-editable="experience.${index}.startDate">${item.startDate}</span>
+							 -
+							<span data-editable="experience.${index}.endDate">${item.endDate}</span>
+						</div>
+						<div class="job-description">
+							<p data-editable="experience.${index}.description">• ${item.description}</p>
+						</div>
+					</div>
+				`).join('');
 			}
 
 			// Skills
 			const skillsContainer = document.getElementById('skills-container');
 			if (resumeData.skills) {
-			    skillsContainer.innerHTML = resumeData.skills.map(skill => `
-			        <div class="skill-item">• ${skill}</div>
-			    `).join('');
+				skillsContainer.innerHTML = resumeData.skills.map((skill, index) => `
+					<div class="skill-item" data-editable="skills.${index}">• ${skill}</div>
+				`).join('');
 			}
 		</script>
 	</body>

@@ -16,8 +16,12 @@
 					<div class="photo-placeholder"></div>
 				</div>
 				<div class="header-text">
-					<h1>{{personalInfo.fullName}}</h1>
-					<h2>{{personalInfo.position}}</h2>
+					<h1 data-editable="personalInfo.fullName">
+						{{personalInfo.fullName}}
+					</h1>
+					<h2 data-editable="personalInfo.position">
+						{{personalInfo.position}}
+					</h2>
 				</div>
 			</header>
 
@@ -28,15 +32,21 @@
 						<h3>CONTACT</h3>
 						<div class="contact-item">
 							<span class="icon">📞</span>
-							<span>{{personalInfo.phone}}</span>
+							<span data-editable="personalInfo.phone"
+								>{{personalInfo.phone}}</span
+							>
 						</div>
 						<div class="contact-item">
 							<span class="icon">✉️</span>
-							<span>{{personalInfo.email}}</span>
+							<span data-editable="personalInfo.email"
+								>{{personalInfo.email}}</span
+							>
 						</div>
 						<div class="contact-item">
 							<span class="icon">📍</span>
-							<span>{{personalInfo.location}}</span>
+							<span data-editable="personalInfo.location"
+								>{{personalInfo.location}}</span
+							>
 						</div>
 						<div class="contact-item">
 							<span class="icon">🌐</span>
@@ -89,51 +99,60 @@
 			// Skills
 			const skillsContainer = document.getElementById('skills-container');
 			if (resumeData.skills) {
-			    skillsContainer.innerHTML = resumeData.skills.map(skill => `
-			        <div class="skill-item">• ${skill}</div>
-			    `).join('');
+				skillsContainer.innerHTML = resumeData.skills.map((skill, index) => `
+					<div class="skill-item" data-editable="skills.${index}">• ${skill}</div>
+				`).join('');
 			}
 
 			// Experience
 			const expContainer = document.getElementById('experience-container');
 			if (resumeData.experience) {
-			    expContainer.innerHTML = resumeData.experience.map(item => `
-			        <div class="timeline-item">
-			            <div class="timeline-dot"></div>
-			            <div class="timeline-content">
-			                <div class="job-header">
-			                    <div class="job-info">
-			                        <h4>${item.company}</h4>
-			                        <p class="job-title">${item.position}</p>
-			                    </div>
-			                    <div class="job-period">${item.startDate} - ${item.endDate}</div>
-			                </div>
-			                <div class="job-description">
-			                    <p>• ${item.description}</p>
-			                </div>
-			            </div>
-			        </div>
-			    `).join('');
+				expContainer.innerHTML = resumeData.experience.map((item, index) => `
+					<div class="timeline-item">
+						<div class="timeline-dot"></div>
+						<div class="timeline-content">
+							<div class="job-header">
+								<div class="job-info">
+									<h4 data-editable="experience.${index}.company">${item.company}</h4>
+									<p class="job-title" data-editable="experience.${index}.position">${item.position}</p>
+								</div>
+								<div class="job-period">
+									<span data-editable="experience.${index}.startDate">${item.startDate}</span>
+									-
+									<span data-editable="experience.${index}.endDate">${item.endDate}</span>
+								</div>
+							</div>
+							<div class="job-description">
+								<p data-editable="experience.${index}.description">• ${item.description}</p>
+							</div>
+						</div>
+					</div>
+				`).join('');
 			}
 
 			// Education
 			const eduContainer = document.getElementById('education-container');
 			if (resumeData.education) {
-			    eduContainer.innerHTML = resumeData.education.map(item => `
-			        <div class="timeline-item">
-			            <div class="timeline-dot"></div>
-			            <div class="timeline-content">
-			                <div class="edu-header">
-			                    <div class="edu-info">
-			                        <h4>${item.degree}</h4>
-			                        <p class="edu-school">${item.institution}</p>
-			                        <p class="edu-gpa">GPA: 3.8 / 4.0</p>
-			                    </div>
-			                    <div class="edu-period">${item.startDate} - ${item.endDate}</div>
-			                </div>
-			            </div>
-			        </div>
-			    `).join('');
+				eduContainer.innerHTML = resumeData.education.map((item, index) => `
+					<div class="timeline-item">
+						<div class="timeline-dot"></div>
+						<div class="timeline-content">
+							<div class="edu-header">
+								<div class="edu-info">
+									<h4 data-editable="education.${index}.degree">${item.degree}</h4>
+									<p class="edu-school" data-editable="education.${index}.institution">${item.institution}</p>
+									<p class="edu-field" data-editable="education.${index}.fieldOfStudy">${item.fieldOfStudy}</p>
+								</div>
+								<div class="edu-period">
+									<span data-editable="education.${index}.startDate">${item.startDate}</span>
+									-
+									<span data-editable="education.${index}.endDate">${item.endDate}</span>
+								</div>
+							</div>
+							${item.description ? `<p class="edu-description" data-editable="education.${index}.description">${item.description}</p>` : ''}
+						</div>
+					</div>
+				`).join('');
 			}
 		</script>
 	</body>

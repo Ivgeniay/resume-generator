@@ -94,7 +94,6 @@ export const useResumeData = (): UseResumeDataReturn => {
 			};
 
 			const result = await ResumeService.generateResume(requestData);
-			console.log(result);
 			setGeneratedData(result);
 		} catch (err) {
 			setError(

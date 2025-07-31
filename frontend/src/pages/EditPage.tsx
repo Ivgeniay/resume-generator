@@ -10,11 +10,10 @@ import { EditableResume } from "../components/editor/EditableResume";
 export const EditPage: React.FC = () => {
 	const navigate = useNavigate();
 
-	const { generatedData, selectedTemplate } = useAppStore();
+	const { generatedData, selectedTemplate, setGeneratedData } = useAppStore();
 	const { previewTemplate } = useTemplates();
 
 	const [resumeHtml, setResumeHtml] = useState<string>("");
-	const [editedData, setEditedData] = useState(generatedData);
 	const [isLoadingPreview, setIsLoadingPreview] = useState(true);
 	const [isGeneratingPdf, setIsGeneratingPdf] = useState(false);
 	const [error, setError] = useState<string | null>(null);
@@ -25,13 +24,11 @@ export const EditPage: React.FC = () => {
 			return;
 		}
 
-		console.log(generatedData);
-
 		loadPreview();
 	}, [generatedData, selectedTemplate, navigate]);
 
 	const loadPreview = async () => {
-		if (!selectedTemplate || !editedData) return;
+		if (!selectedTemplate || !generatedData) return;
 
 		// console.log("EditPage loadPreview:", { selectedTemplate, editedData });
 
@@ -39,7 +36,7 @@ export const EditPage: React.FC = () => {
 		setError(null);
 
 		try {
-			const html = await previewTemplate(selectedTemplate, editedData);
+			const html = await previewTemplate(selectedTemplate, generatedData);
 			setResumeHtml(html);
 		} catch (err) {
 			setError(
@@ -51,12 +48,12 @@ export const EditPage: React.FC = () => {
 	};
 
 	const handleDataChange = (newData: any) => {
-		setEditedData(newData);
-		loadPreview();
+		setGeneratedData(newData);
+		// loadPreview();
 	};
 
 	const handleSaveAsPdf = async () => {
-		if (!selectedTemplate || !editedData) return;
+		if (!selectedTemplate || !generatedData) return;
 
 		setIsGeneratingPdf(true);
 		setError(null);
@@ -64,7 +61,7 @@ export const EditPage: React.FC = () => {
 		try {
 			const pdfBlob = await ResumeService.generatePdf({
 				templateName: selectedTemplate,
-				resumeData: editedData,
+				resumeData: generatedData,
 			});
 
 			ResumeService.downloadPdf(pdfBlob, "resume.pdf");
@@ -170,7 +167,6 @@ export const EditPage: React.FC = () => {
 					<div className="bg-white rounded-lg shadow-lg">
 						<EditableResume
 							resumeHtml={resumeHtml}
-							resumeData={editedData}
 							onDataChange={handleDataChange}
 						/>
 					</div>
